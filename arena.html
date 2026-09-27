@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Snooker Arena - Broadcast Layout</title>
-    <link rel="stylesheet" href="style.css?v=11">
+    <link rel="stylesheet" href="style.css?v=12">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="arena-mode">
 
     <div class="snooker-scoreboard-card">
         
-        <!-- ЛЕВАЯ СТОРОНА -->
+        <!-- ЛЕВАЯ СТОРОНА (ИГРОК 1) -->
         <div class="player-side p1-side" id="arena-p1">
-            <!-- Фото (Красный блок) -->
-            <div class="box-photo">
-                <img id="p1_photo_img" src="https://via.placeholder.com/150" alt="Player 1">
+            <div class="photo-name-group">
+                <div class="box-photo">
+                    <img id="p1_photo_img" src="https://via.placeholder.com/150" alt="Player 1">
+                </div>
+                <div class="box-name" id="p1_name">PLAYER 1</div>
             </div>
-            <!-- Имя (Розовый блок) -->
-            <div class="box-name" id="p1_name">PLAYER 1</div>
-            <!-- Счет (Желтый блок) -->
             <div class="box-score" id="p1_score">0</div>
         </div>
 
@@ -35,15 +34,14 @@
             </div>
         </div>
 
-        <!-- ПРАВАЯ СТОРОНА -->
+        <!-- ПРАВАЯ СТОРОНА (ИГРОК 2) -->
         <div class="player-side p2-side" id="arena-p2">
-            <!-- Фото (Красный блок) -->
-            <div class="box-photo">
-                <img id="p2_photo_img" src="https://via.placeholder.com/150" alt="Player 2">
+            <div class="photo-name-group">
+                <div class="box-name" id="p2_name">PLAYER 2</div>
+                <div class="box-photo">
+                    <img id="p2_photo_img" src="https://via.placeholder.com/150" alt="Player 2">
+                </div>
             </div>
-            <!-- Имя (Розовый блок) -->
-            <div class="box-name" id="p2_name">PLAYER 2</div>
-            <!-- Счет (Желтый блок) -->
             <div class="box-score" id="p2_score">0</div>
         </div>
 
