@@ -2,56 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Snooker Arena Screen</title>
+    <title>Snooker Arena Live Match - Snookershot Style</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="arena-mode">
 
-    <div class="arena-container">
-        <!-- Игрок 1 -->
-        <div class="arena-player" id="arena-p1">
-            <div class="arena-photo-wrap">
-                <img id="p1_photo_img" src="https://via.placeholder.com/150" alt="Player 1">
-            </div>
-            <div class="arena-info">
-                <h2 id="p1_name">Player 1</h2>
-                <div class="arena-score-box">
-                    <span class="arena-label">FR: <b id="p1_frames">0</b></span>
-                    <div class="arena-score" id="p1_score">0</div>
-                </div>
-            </div>
+    <div class="snooker-scoreboard-card">
+        <!-- Шапка с информацией о матче -->
+        <div class="match-header-info">
+            <span class="tournament-badge">SNOOKER LIVE ARENA</span>
+            <span class="table-badge">TABLE 1</span>
         </div>
 
-        <!-- Центральный блок: Брейк и Остаток очков -->
-        <div class="arena-center">
-            <div class="arena-break-card">
-                <span>BREAK</span>
-                <div id="current_break">0</div>
+        <div class="main-scoreboard-row">
+            <!-- ИГРОК 1 -->
+            <div class="player-side p1-side" id="arena-p1">
+                <div class="player-photo-container">
+                    <img id="p1_photo_img" src="https://via.placeholder.com/150" alt="Player 1">
+                </div>
+                <div class="player-details">
+                    <div class="player-name-row">
+                        <span class="player-name" id="p1_name">PLAYER 1</span>
+                    </div>
+                    <div class="frames-boxes">
+                        <span class="frames-label">FRAMES</span>
+                        <div class="frame-count-box" id="p1_frames">0</div>
+                    </div>
+                </div>
+                <div class="player-score-box" id="p1_score">0</div>
             </div>
-            <div class="arena-pts-left">
-                REMAINING: <b id="pts_remaining">147</b>
-            </div>
-        </div>
 
-        <!-- Игрок 2 -->
-        <div class="arena-player" id="arena-p2">
-            <div class="arena-info right">
-                <h2 id="p2_name">Player 2</h2>
-                <div class="arena-score-box">
-                    <div class="arena-score" id="p2_score">0</div>
-                    <span class="arena-label">FR: <b id="p2_frames">0</b></span>
+            <!-- ЦЕНТРАЛЬНЫЙ БЛОК (Брейк и остаток) -->
+            <div class="center-stats-column">
+                <div class="break-display-box">
+                    <span class="break-title">BREAK</span>
+                    <div class="break-value" id="current_break">0</div>
+                </div>
+                <div class="remaining-pts-box">
+                    REMAINING: <b id="pts_remaining">147</b>
                 </div>
             </div>
-            <div class="arena-photo-wrap">
-                <img id="p2_photo_img" src="https://via.placeholder.com/150" alt="Player 2">
+
+            <!-- ИГРОК 2 -->
+            <div class="player-side p2-side" id="arena-p2">
+                <div class="player-score-box" id="p2_score">0</div>
+                <div class="player-details right-align">
+                    <div class="player-name-row">
+                        <span class="player-name" id="p2_name">PLAYER 2</span>
+                    </div>
+                    <div class="frames-boxes">
+                        <div class="frame-count-box" id="p2_frames">0</div>
+                        <span class="frames-label">FRAMES</span>
+                    </div>
+                </div>
+                <div class="player-photo-container">
+                    <img id="p2_photo_img" src="https://via.placeholder.com/150" alt="Player 2">
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-      const SUPABASE_URL = 'https://hljrikalmcsaencxonuz.supabase.co';
-      const SUPABASE_KEY = 'sb_publishable_9yuDAfIJnsQJpL9w1eS_Ig_o66RWYr-';
+	const SUPABASE_URL = 'https://hljrikalmcsaencxonuz.supabase.co';
+	const SUPABASE_KEY = 'sb_publishable_9yuDAfIJnsQJpL9w1eS_Ig_o66RWYr-';
       const MATCH_ID = 1;
 
       const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -72,7 +86,7 @@
           const reds = data.reds_on_table ?? 15;
           document.getElementById('pts_remaining').innerText = (reds * 8) + 27;
 
-          // Подсветка активного игрока (у кого сейчас ход)
+          // Подсветка активного игрока
           document.getElementById('arena-p1').classList.toggle('active-turn', data.active_player === 'p1');
           document.getElementById('arena-p2').classList.toggle('active-turn', data.active_player === 'p2');
       }
@@ -94,4 +108,4 @@
       setInterval(loadInitialData, 2000);
     </script>
 </body>
-</html>	
+</html>
