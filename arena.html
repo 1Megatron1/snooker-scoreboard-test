@@ -2,57 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Snooker Arena - Professional Layout</title>
-    <link rel="stylesheet" href="style.css?v=10">
+    <title>Snooker Arena - Broadcast Layout</title>
+    <link rel="stylesheet" href="style.css?v=11">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="arena-mode">
 
     <div class="snooker-scoreboard-card">
-        <!-- Центральная вертикальная линия-разделитель -->
-        <div class="center-vertical-line"></div>
-
-        <!-- Левый игрок -->
-        <div class="player-zone p1-zone" id="arena-p1">
-            <!-- Фото игрока (Красный блок с эскиза) -->
+        
+        <!-- ЛЕВАЯ СТОРОНА -->
+        <div class="player-side p1-side" id="arena-p1">
+            <!-- Фото (Красный блок) -->
             <div class="box-photo">
                 <img id="p1_photo_img" src="https://via.placeholder.com/150" alt="Player 1">
             </div>
-            <!-- Имя игрока (Розовый блок с эскиза) -->
+            <!-- Имя (Розовый блок) -->
             <div class="box-name" id="p1_name">PLAYER 1</div>
-            <!-- Счет во фрейме (Желтый блок с эскиза) -->
+            <!-- Счет (Желтый блок) -->
             <div class="box-score" id="p1_score">0</div>
         </div>
 
-        <!-- Центральный нижний блок (Синие блоки с эскиза) -->
-        <div class="center-footer-zone">
-            <!-- Фреймы игрока 1 -->
-            <div class="box-frames" id="p1_frames">0</div>
-            <!-- Центральный брейк -->
-            <div class="box-break">
-                <span class="break-title">BREAK</span>
-                <span id="current_break">0</span>
+        <!-- ЦЕНТР (Линия и синие блоки) -->
+        <div class="center-column">
+            <div class="vertical-divider"></div>
+            <div class="center-footer-zone">
+                <div class="box-frames" id="p1_frames">0</div>
+                <div class="box-break">
+                    <span class="break-title">BREAK</span>
+                    <span id="current_break">0</span>
+                </div>
+                <div class="box-frames" id="p2_frames">0</div>
             </div>
-            <!-- Фреймы игрока 2 -->
-            <div class="box-frames" id="p2_frames">0</div>
         </div>
 
-        <!-- Правый игрок -->
-        <div class="player-zone p2-zone" id="arena-p2">
-            <!-- Фото игрока -->
+        <!-- ПРАВАЯ СТОРОНА -->
+        <div class="player-side p2-side" id="arena-p2">
+            <!-- Фото (Красный блок) -->
             <div class="box-photo">
                 <img id="p2_photo_img" src="https://via.placeholder.com/150" alt="Player 2">
             </div>
-            <!-- Имя игрока -->
+            <!-- Имя (Розовый блок) -->
             <div class="box-name" id="p2_name">PLAYER 2</div>
-            <!-- Счет во фрейме -->
+            <!-- Счет (Желтый блок) -->
             <div class="box-score" id="p2_score">0</div>
         </div>
+
     </div>
 
     <script>
-	const SUPABASE_URL = 'https://hljrikalmcsaencxonuz.supabase.co';
-	const SUPABASE_KEY = 'sb_publishable_9yuDAfIJnsQJpL9w1eS_Ig_o66RWYr-';
+      const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+      const SUPABASE_KEY = 'YOUR_ANON_KEY';
       const MATCH_ID = 1;
 
       const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
