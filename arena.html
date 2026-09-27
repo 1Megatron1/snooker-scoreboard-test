@@ -2,62 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Snooker Arena - Snookershot Layout</title>
-    <link rel="stylesheet" href="style.css?v=6">
+    <title>Snooker Arena - Professional Layout</title>
+    <link rel="stylesheet" href="style.css?v=10">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="arena-mode">
 
     <div class="snooker-scoreboard-card">
-        
-        <!-- ВЕРХНЯЯ ЧАСТЬ: Игроки и Центр -->
-        <div class="scoreboard-main-row">
-            
-            <!-- ИГРОК 1 (Фото слева, имя ближе к центру) -->
-            <div class="player-side p1-side" id="arena-p1">
-                <div class="player-photo-container">
-                    <img id="p1_photo_img" src="https://via.placeholder.com/150" alt="Player 1">
-                    <!-- Счет во фрейме ПОД фоткой в отдельном боксе -->
-                    <div class="player-score-box" id="p1_score">0</div>
-                </div>
-                
-                <div class="player-info-block">
-                    <div class="player-name" id="p1_name">PLAYER 1</div>
-                    <div class="frames-box"><span id="p1_frames">0</span></div>
-                </div>
+        <!-- Центральная вертикальная линия-разделитель -->
+        <div class="center-vertical-line"></div>
+
+        <!-- Левый игрок -->
+        <div class="player-zone p1-zone" id="arena-p1">
+            <!-- Фото игрока (Красный блок с эскиза) -->
+            <div class="box-photo">
+                <img id="p1_photo_img" src="https://via.placeholder.com/150" alt="Player 1">
             </div>
-
-            <!-- ЦЕНТРАЛЬНАЯ ЛИНИЯ И СТАТИСТИКА -->
-            <div class="center-divider-column">
-                <div class="vertical-line"></div>
-                <div class="break-center-box">
-                    <span class="break-title">BREAK</span>
-                    <div class="break-value" id="current_break">0</div>
-                </div>
-                <div class="remaining-pts-box">REM: <b id="pts_remaining">147</b></div>
-            </div>
-
-            <!-- ИГРОК 2 (Имя ближе к центру, фото справа) -->
-            <div class="player-side p2-side" id="arena-p2">
-                <div class="player-info-block right-align">
-                    <div class="player-name" id="p2_name">PLAYER 2</div>
-                    <div class="frames-box"><span id="p2_frames">0</span></div>
-                </div>
-
-                <div class="player-photo-container">
-                    <img id="p2_photo_img" src="https://via.placeholder.com/150" alt="Player 2">
-                    <!-- Счет во фрейме ПОД фоткой в отдельном боксе -->
-                    <div class="player-score-box" id="p2_score">0</div>
-                </div>
-            </div>
-
+            <!-- Имя игрока (Розовый блок с эскиза) -->
+            <div class="box-name" id="p1_name">PLAYER 1</div>
+            <!-- Счет во фрейме (Желтый блок с эскиза) -->
+            <div class="box-score" id="p1_score">0</div>
         </div>
 
-        <!-- НИЖНЯЯ ЧАСТЬ: Под центральной линией (Максимум фреймов) -->
-        <div class="scoreboard-footer-row">
-            <div class="max-frames-badge">BEST OF <span id="max_frames">5</span> FRAMES</div>
+        <!-- Центральный нижний блок (Синие блоки с эскиза) -->
+        <div class="center-footer-zone">
+            <!-- Фреймы игрока 1 -->
+            <div class="box-frames" id="p1_frames">0</div>
+            <!-- Центральный брейк -->
+            <div class="box-break">
+                <span class="break-title">BREAK</span>
+                <span id="current_break">0</span>
+            </div>
+            <!-- Фреймы игрока 2 -->
+            <div class="box-frames" id="p2_frames">0</div>
         </div>
 
+        <!-- Правый игрок -->
+        <div class="player-zone p2-zone" id="arena-p2">
+            <!-- Фото игрока -->
+            <div class="box-photo">
+                <img id="p2_photo_img" src="https://via.placeholder.com/150" alt="Player 2">
+            </div>
+            <!-- Имя игрока -->
+            <div class="box-name" id="p2_name">PLAYER 2</div>
+            <!-- Счет во фрейме -->
+            <div class="box-score" id="p2_score">0</div>
+        </div>
     </div>
 
     <script>
@@ -79,9 +69,6 @@
 
           if (data.p1_photo) document.getElementById('p1_photo_img').src = data.p1_photo;
           if (data.p2_photo) document.getElementById('p2_photo_img').src = data.p2_photo;
-
-          const reds = data.reds_on_table ?? 15;
-          document.getElementById('pts_remaining').innerText = (reds * 8) + 27;
 
           document.getElementById('arena-p1').classList.toggle('active-turn', data.active_player === 'p1');
           document.getElementById('arena-p2').classList.toggle('active-turn', data.active_player === 'p2');
