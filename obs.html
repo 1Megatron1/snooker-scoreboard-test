@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snooker OBS Stream Overlay</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="obs-mode">
+
+    <div class="obs-bar">
+        <div class="obs-player p1" id="p1-block">
+            <span class="obs-indicator"></span>
+            <span class="obs-name" id="p1_name">Player 1</span>
+            <span class="obs-frames" id="p1_frames">0</span>
+            <span class="obs-score" id="p1_score">0</span>
+        </div>
+
+        <div class="obs-break-box">
+            <span class="obs-break-label">BREAK</span>
+            <span class="obs-break-val" id="current_break">0</span>
+            <span class="obs-pts-rem">PTS LEFT: <b id="pts_remaining">147</b></span>
+        </div>
+
+        <div class="obs-player p2" id="p2-block">
+            <span class="obs-score" id="p2_score">0</span>
+            <span class="obs-frames" id="p2_frames">0</span>
+            <span class="obs-name" id="p2_name">Player 2</span>
+            <span class="obs-indicator"></span>
+        </div>
+    </div>
+
+    <script>
+	const SUPABASE_URL = 'https://hljrikalmcsaencxonuz.supabase.co';
+	const SUPABASE_KEY = 'sb_publishable_9yuDAfIJnsQJpL9w1eS_Ig_o66RWYr-';
+      const MATCH_ID = 1;
+
+      const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      function renderData(data) {
+          if (!data) return;
+          document.getElementById('p1_name').innerText = data.p1_name || 'Player 1';
+          document.getElementById('p2_name').innerText = data.p2_name || 'Player 2';
+          document.getElementById('p1_score').innerText = data.p1_score || 0;
+          document.getElementById('p2_score').innerText = data.p2_score || 0;
+          document.getElementById('p1_frames').innerText = data.p1_frames || 0;
+          document.getElementById('p2_frames').innerText = data.p2_frames || 0;
+          document.getElementById('current_break').innerText = data.current_break || 0;
+
+          const reds = data.reds_on_table ?? 15;
+          const ptsLeft = (reds * 8) + 27;
+          document.getElementById('pts_remaining').innerText = ptsLeft;
+
+          document.getElementById('p1-block').classList.toggle('active-turn', data.active_player === 'p1');
+          document.getElementById('p2-block').classList.toggle('active-turn', data.active_player === 'p2');
+      }
+
+      async function loadInitialData() {
+          const { data } = await _supabase.from('matches').select('*').eq('id', MATCH_ID).single();
+          renderData(data);
+      }
+      loadInitialData();
+
+      _supabase
+        .channel('schema-db-changes')
+        .on('postgres_changes', 
+            { event: 'UPDATE', schema: 'public', table: 'matches', filter: `id=eq.${MATCH_ID}` },
+            (payload) => { renderData(payload.new); }
+        )
+        .subscribe();
+
+      setInterval(loadInitialData, 2000);
+    </script>
+</body>
+</html>

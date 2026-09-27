@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snooker Controller</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="control-mode">
+
+    <h2>Snooker Controller</h2>
+
+    <div class="names-panel">
+        <input type="text" id="input-p1-name" placeholder="P1 Name" onchange="updateNames()">
+        <span>VS</span>
+        <input type="text" id="input-p2-name" placeholder="P2 Name" onchange="updateNames()">
+    </div>
+
+    <div class="control-row">
+        <button class="btn-undo" onclick="undoLastAction()">↩ Undo</button>
+        <button class="btn-break" onclick="resetBreak()">End Break</button>
+    </div>
+
+    <div class="player-selector">
+        <button id="btn-p1" class="player-btn active" onclick="selectPlayer('p1')">Player 1</button>
+        <button id="btn-p2" class="player-btn" onclick="selectPlayer('p2')">Player 2</button>
+    </div>
+
+    <div class="balls-grid">
+        <button class="ball red" onclick="addPoints(1)">1</button>
+        <button class="ball yellow" onclick="addPoints(2)">2</button>
+        <button class="ball green" onclick="addPoints(3)">3</button>
+        <button class="ball brown" onclick="addPoints(4)">4</button>
+        <button class="ball blue" onclick="addPoints(5)">5</button>
+        <button class="ball pink" onclick="addPoints(6)">6</button>
+        <button class="ball black" onclick="addPoints(7)">7</button>
+    </div>
+
+    <div class="reds-control">
+        <span>Reds on table: <b id="reds-count">15</b></span>
+        <div>
+            <button onclick="changeReds(-1)">-1 Red</button>
+            <button onclick="changeReds(1)">+1 Red</button>
+        </div>
+    </div>
+
+    <div class="foul-section">
+        <span class="section-title">Foul (points to opponent):</span>
+        <div class="foul-grid">
+            <button class="btn-foul" onclick="addFoul(4)">+4</button>
+            <button class="btn-foul" onclick="addFoul(5)">+5</button>
+            <button class="btn-foul" onclick="addFoul(6)">+6</button>
+            <button class="btn-foul" onclick="addFoul(7)">+7</button>
+        </div>
+    </div>
+
+    <div class="bottom-actions">
+        <button class="btn-end-frame" onclick="endFrame()">🏁 End Frame</button>
+        <button class="btn-danger" onclick="resetMatch()">Reset Entire Match</button>
+    </div>
+
+    <script>
+	const SUPABASE_URL = 'https://hljrikalmcsaencxonuz.supabase.co';
+	const SUPABASE_KEY = 'sb_publishable_9yuDAfIJnsQJpL9w1eS_Ig_o66RWYr-';
+      const MATCH_ID = 1;
+
+      const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      
+      let activePlayer = 'p1';
+      let lastActivePlayer = null; 
+      let previousActivePlayer = null; 
+      let currentData = {};
+      let previousState = null; 
+
+      async function updateCurrentData() {
+          const { data } = await _supabase.from('matches').select('*').eq('id', MATCH_ID).single();
+          if (data) {
+              currentData = data;
+              if (document.getElementById('input-p1-name') && !document.getElementById('input-p1-name').value) {
+                  document.getElementById('input-p1-name').value = data.p1_name || 'Player 1';
+                  document.getElementById('input-p2-name').value = data.p2_name || 'Player 2';
+                  updatePlayerButtonsText();
+              }
+              if (data.reds_on_table !== undefined) {
+                  document.getElementById('reds-count').innerText = data.reds_on_table;
+              }
+          }
+      }
+      updateCurrentData();
+
+      _supabase
+        .channel('schema-db-changes')
+        .on('postgres_changes', 
+            { event: 'UPDATE', schema: 'public', table: 'matches', filter: `id=eq.${MATCH_ID}` },
+            (payload) => { 
+                currentData = payload.new; 
+                document.getElementById('reds-count').innerText = payload.new.reds_on_table ?? 15;
+            }
+        )
+        .subscribe();
+
+      function updatePlayerButtonsText() {
+          document.getElementById('btn-p1').innerText = currentData.p1_name || 'Player 1';
+          document.getElementById('btn-p2').innerText = currentData.p2_name || 'Player 2';
+      }
+
+      async function updateNames() {
+          const p1 = document.getElementById('input-p1-name').value;
+          const p2 = document.getElementById('input-p2-name').value;
+          await _supabase.from('matches').update({ p1_name: p1, p2_name: p2 }).eq('id', MATCH_ID);
+          updatePlayerButtonsText();
+      }
+
+      function selectPlayer(player) {
+          activePlayer = player;
+          document.getElementById('btn-p1').classList.toggle('active', player === 'p1');
+          document.getElementById('btn-p2').classList.toggle('active', player === 'p2');
+          _supabase.from('matches').update({ active_player: player }).eq('id', MATCH_ID);
+      }
+
+      function saveHistory() {
+          previousState = { ...currentData };
+          previousActivePlayer = lastActivePlayer;
+      }
+
+      async function undoLastAction() {
+          if (!previousState) return alert("Nothing to undo!");
+          await _supabase.from('matches').update(previousState).eq('id', MATCH_ID);
+          lastActivePlayer = previousActivePlayer;
+          previousState = null;
+      }
+
+      async function addPoints(points) {
+          await updateCurrentData();
+          saveHistory();
+          
+          const scoreField = activePlayer + '_score';
+          const newScore = (currentData[scoreField] || 0) + points;
+
+          let newBreak = (lastActivePlayer === activePlayer) ? ((currentData.current_break || 0) + points) : points;
+          lastActivePlayer = activePlayer;
+
+          let newReds = currentData.reds_on_table ?? 15;
+          if (points === 1 && newReds > 0) newReds--;
+
+          await _supabase.from('matches').update({ 
+              [scoreField]: newScore, 
+              current_break: newBreak,
+              reds_on_table: newReds,
+              active_player: activePlayer
+          }).eq('id', MATCH_ID);
+      }
+
+      async function changeReds(amount) {
+          await updateCurrentData();
+          saveHistory();
+          let currentReds = currentData.reds_on_table ?? 15;
+          let newReds = Math.max(0, currentReds + amount);
+          await _supabase.from('matches').update({ reds_on_table: newReds }).eq('id', MATCH_ID);
+      }
+
+      async function addFoul(points) {
+          await updateCurrentData();
+          saveHistory();
+
+          const opponent = activePlayer === 'p1' ? 'p2' : 'p1';
+          const scoreField = opponent + '_score';
+          const newScore = (currentData[scoreField] || 0) + points;
+
+          lastActivePlayer = null;
+
+          await _supabase.from('matches').update({ 
+              [scoreField]: newScore, 
+              current_break: 0 
+          }).eq('id', MATCH_ID);
+      }
+
+      async function endFrame() {
+          await updateCurrentData();
+          
+          const p1 = currentData.p1_score || 0;
+          const p2 = currentData.p2_score || 0;
+
+          if (p1 === 0 && p2 === 0) {
+              alert("Scores are 0-0!");
+              return;
+          }
+
+          saveHistory();
+
+          let winnerField = '';
+          if (p1 > p2) {
+              winnerField = 'p1_frames';
+          } else if (p2 > p1) {
+              winnerField = 'p2_frames';
+          } else {
+              const choice = confirm("Tie score! Click OK for Player 1, Cancel for Player 2.");
+              winnerField = choice ? 'p1_frames' : 'p2_frames';
+          }
+
+          const newFrames = (currentData[winnerField] || 0) + 1;
+          lastActivePlayer = null;
+
+          await _supabase.from('matches').update({ 
+              [winnerField]: newFrames, 
+              p1_score: 0, 
+              p2_score: 0, 
+              current_break: 0,
+              reds_on_table: 15
+          }).eq('id', MATCH_ID);
+      }
+
+      async function resetBreak() {
+          await updateCurrentData();
+          saveHistory();
+          lastActivePlayer = null;
+          await _supabase.from('matches').update({ current_break: 0 }).eq('id', MATCH_ID);
+      }
+
+      async function resetMatch() {
+          if (confirm("Reset the entire match?")) {
+              await updateCurrentData();
+              saveHistory();
+              lastActivePlayer = null;
+              await _supabase.from('matches').update({ 
+                  p1_score: 0, 
+                  p2_score: 0, 
+                  p1_frames: 0, 
+                  p2_frames: 0, 
+                  current_break: 0,
+                  reds_on_table: 15
+              }).eq('id', MATCH_ID);
+          }
+      }
+    </script>
+</body>
+</html>
