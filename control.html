@@ -17,6 +17,15 @@
         <input type="text" id="input-p2-name" placeholder="P2 Name" onchange="updateNames()">
     </div>
 
+    <!-- Новая панель для ссылок на фотографии игроков -->
+    <div class="photos-panel" style="margin-bottom: 15px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px;">
+        <span class="section-title" style="margin-bottom: 6px;">Player Photos (URLs):</span>
+        <div style="display: flex; gap: 8px;">
+            <input type="text" id="input-p1-photo" placeholder="P1 Photo URL" onchange="updatePhotos()" style="flex:1; padding: 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; font-size: 11px;">
+            <input type="text" id="input-p2-photo" placeholder="P2 Photo URL" onchange="updatePhotos()" style="flex:1; padding: 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; font-size: 11px;">
+        </div>
+    </div>
+
     <div class="control-row">
         <button class="btn-undo" onclick="undoLastAction()">↩ Undo</button>
         <button class="btn-break" onclick="resetBreak()">End Break</button>
@@ -78,8 +87,10 @@
           if (data) {
               currentData = data;
               if (document.getElementById('input-p1-name') && !document.getElementById('input-p1-name').value) {
-                  document.getElementById('input-p1-name').value = data.p1_name || 'Player 1';
-                  document.getElementById('input-p2-name').value = data.p2_name || 'Player 2';
+                  document.getElementById('input-p1-name').value = data.p1_name || '';
+                  document.getElementById('input-p2-name').value = data.p2_name || '';
+                  document.getElementById('input-p1-photo').value = data.p1_photo || '';
+                  document.getElementById('input-p2-photo').value = data.p2_photo || '';
                   updatePlayerButtonsText();
               }
               if (data.reds_on_table !== undefined) {
@@ -110,6 +121,12 @@
           const p2 = document.getElementById('input-p2-name').value;
           await _supabase.from('matches').update({ p1_name: p1, p2_name: p2 }).eq('id', MATCH_ID);
           updatePlayerButtonsText();
+      }
+
+      async function updatePhotos() {
+          const p1Photo = document.getElementById('input-p1-photo').value;
+          const p2Photo = document.getElementById('input-p2-photo').value;
+          await _supabase.from('matches').update({ p1_photo: p1Photo, p2_photo: p2Photo }).eq('id', MATCH_ID);
       }
 
       function selectPlayer(player) {
