@@ -2,61 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Snooker Arena Live Match</title>
-    <link rel="stylesheet" href="style.css?v=4">
+    <title>Snooker Arena - Snookershot Layout</title>
+    <link rel="stylesheet" href="style.css?v=6">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="arena-mode">
 
     <div class="snooker-scoreboard-card">
-        <!-- Шапка матча -->
-        <div class="match-header-info">
-            <span class="tournament-badge">LIVE SNOOKER ARENA</span>
-            <span class="table-badge">TABLE 1</span>
-        </div>
-
-        <div class="main-scoreboard-row">
-            <!-- ИГРОК 1 -->
-            <div class="player-side" id="arena-p1">
+        
+        <!-- ВЕРХНЯЯ ЧАСТЬ: Игроки и Центр -->
+        <div class="scoreboard-main-row">
+            
+            <!-- ИГРОК 1 (Фото слева, имя ближе к центру) -->
+            <div class="player-side p1-side" id="arena-p1">
                 <div class="player-photo-container">
                     <img id="p1_photo_img" src="https://via.placeholder.com/150" alt="Player 1">
+                    <!-- Счет во фрейме ПОД фоткой в отдельном боксе -->
+                    <div class="player-score-box" id="p1_score">0</div>
                 </div>
-                <div class="player-details">
-                    <span class="player-name" id="p1_name">PLAYER 1</span>
-                    <div class="frames-row">
-                        <span class="frames-label">FR</span>
-                        <div class="frame-count-box" id="p1_frames">0</div>
-                    </div>
+                
+                <div class="player-info-block">
+                    <div class="player-name" id="p1_name">PLAYER 1</div>
+                    <div class="frames-box"><span id="p1_frames">0</span></div>
                 </div>
-                <div class="player-score-box" id="p1_score">0</div>
             </div>
 
-            <!-- ЦЕНТР: Брейк и Остаток -->
-            <div class="center-stats-column">
-                <div class="break-display-box">
+            <!-- ЦЕНТРАЛЬНАЯ ЛИНИЯ И СТАТИСТИКА -->
+            <div class="center-divider-column">
+                <div class="vertical-line"></div>
+                <div class="break-center-box">
                     <span class="break-title">BREAK</span>
                     <div class="break-value" id="current_break">0</div>
                 </div>
-                <div class="remaining-pts-box">
-                    REM: <b id="pts_remaining">147</b>
+                <div class="remaining-pts-box">REM: <b id="pts_remaining">147</b></div>
+            </div>
+
+            <!-- ИГРОК 2 (Имя ближе к центру, фото справа) -->
+            <div class="player-side p2-side" id="arena-p2">
+                <div class="player-info-block right-align">
+                    <div class="player-name" id="p2_name">PLAYER 2</div>
+                    <div class="frames-box"><span id="p2_frames">0</span></div>
+                </div>
+
+                <div class="player-photo-container">
+                    <img id="p2_photo_img" src="https://via.placeholder.com/150" alt="Player 2">
+                    <!-- Счет во фрейме ПОД фоткой в отдельном боксе -->
+                    <div class="player-score-box" id="p2_score">0</div>
                 </div>
             </div>
 
-            <!-- ИГРОК 2 -->
-            <div class="player-side right-side" id="arena-p2">
-                <div class="player-score-box" id="p2_score">0</div>
-                <div class="player-details right-align">
-                    <span class="player-name" id="p2_name">PLAYER 2</span>
-                    <div class="frames-row">
-                        <div class="frame-count-box" id="p2_frames">0</div>
-                        <span class="frames-label">FR</span>
-                    </div>
-                </div>
-                <div class="player-photo-container">
-                    <img id="p2_photo_img" src="https://via.placeholder.com/150" alt="Player 2">
-                </div>
-            </div>
         </div>
+
+        <!-- НИЖНЯЯ ЧАСТЬ: Под центральной линией (Максимум фреймов) -->
+        <div class="scoreboard-footer-row">
+            <div class="max-frames-badge">BEST OF <span id="max_frames">5</span> FRAMES</div>
+        </div>
+
     </div>
 
     <script>
