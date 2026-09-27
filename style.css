@@ -443,139 +443,182 @@ body.obs-mode {
     z-index: 10;
 }
 
-/* --- СТИЛИ ДЛЯ БОЛЬШОГО ЭКРАНА АРЕНЫ (screen.html) --- */
+/* --- СТИЛИ ПРОФЕССИОНАЛЬНОГО ТАБЛО (Снукершоу / Snookershot стиль) --- */
 body.arena-mode {
-    background: radial-gradient(circle at center, #0f2b18 0%, #050d08 100%) !important;
+    background: radial-gradient(circle at center, #11261a 0%, #060d08 100%) !important;
     margin: 0;
-    padding: 40px;
+    padding: 0;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     overflow: hidden;
 }
 
-.arena-container {
+.snooker-scoreboard-card {
+    background: linear-gradient(145deg, #121815 0%, #090d0b 100%);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 20px 30px;
+    width: 90%;
+    max-width: 1250px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.match-header-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #6a8c75;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 8px;
+}
+
+.main-scoreboard-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    max-width: 1400px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    padding: 30px 50px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+    gap: 20px;
 }
 
-/* Исправление отображения аватарок на большом экране (screen.html) */
-.arena-player {
+.player-side {
     display: flex;
     align-items: center;
     gap: 20px;
-    padding: 15px 25px;
-    border-radius: 16px;
-    border: 2px solid transparent;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 14px 20px;
+    flex: 1;
     transition: all 0.3s ease;
 }
 
-.arena-player.active-turn {
+.player-side.active-turn {
     border-color: #00ff88;
-    background: rgba(0, 255, 136, 0.08);
-    box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+    background: rgba(0, 255, 136, 0.06);
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.15);
 }
 
-.arena-photo-wrap {
-    width: 110px;
-    height: 110px;
+.player-photo-container {
+    width: 85px;
+    height: 85px;
     border-radius: 50%;
     overflow: hidden;
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.15);
     flex-shrink: 0;
+    background: #000;
 }
 
-.arena-photo-wrap img {
+.player-photo-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
 }
 
-.arena-info h2 {
-    font-size: 32px;
-    font-weight: 800;
-    margin: 0 0 10px 0;
+.player-details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-grow: 1;
+}
+
+.player-details.right-align {
+    text-align: right;
+    align-items: flex-end;
+}
+
+.player-name {
+    font-size: 22px;
+    font-weight: 900;
     color: #ffffff;
+    letter-spacing: 1px;
     text-transform: uppercase;
 }
 
-.arena-info.right {
-    text-align: right;
-}
-
-.arena-score-box {
+.frames-boxes {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 8px;
 }
 
-.arena-info.right .arena-score-box {
+.p2-side .frames-boxes {
     flex-direction: row-reverse;
 }
 
-.arena-label {
-    font-size: 14px;
-    color: #ffcc00;
+.frames-label {
+    font-size: 10px;
+    color: #888;
     font-weight: 700;
     letter-spacing: 1px;
 }
 
-.arena-score {
-    font-size: 64px;
-    font-weight: 900;
-    color: #00ff88;
-    line-height: 1;
+.frame-count-box {
+    background: #1b2620;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffcc00;
+    font-size: 16px;
+    font-weight: 800;
+    padding: 2px 10px;
+    border-radius: 6px;
+    min-width: 20px;
+    text-align: center;
 }
 
-.arena-center {
+.player-score-box {
+    font-size: 56px;
+    font-weight: 900;
+    color: #00ff88;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0 24px;
+    border-radius: 10px;
+    min-width: 60px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.center-stats-column {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 30px;
-    border-left: 2px solid rgba(255, 255, 255, 0.1);
-    border-right: 2px solid rgba(255, 255, 255, 0.1);
+    justify-content: center;
+    padding: 0 15px;
+    gap: 8px;
 }
 
-.arena-break-card {
+.break-display-box {
+    background: #151b17;
+    border: 1px solid rgba(255, 68, 68, 0.3);
+    border-radius: 10px;
+    padding: 8px 25px;
     text-align: center;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 15px 35px;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 55, 55, 0.3);
-    margin-bottom: 10px;
+    box-shadow: inset 0 0 10px rgba(255, 68, 68, 0.1);
 }
 
-.arena-break-card span {
+.break-title {
     display: block;
-    font-size: 12px;
+    font-size: 9px;
     color: #ff5555;
     font-weight: 800;
     letter-spacing: 2px;
 }
 
-.arena-break-card div {
-    font-size: 48px;
+.break-value {
+    font-size: 38px;
     font-weight: 900;
     color: #ffffff;
+    line-height: 1;
 }
 
-.arena-pts-left {
-    font-size: 12px;
-    color: #aaa;
+.remaining-pts-box {
+    font-size: 10px;
+    color: #777;
     font-weight: 700;
     letter-spacing: 1px;
+    text-transform: uppercase;
 }
