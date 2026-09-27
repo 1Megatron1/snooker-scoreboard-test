@@ -17,20 +17,20 @@
             <div class="arena-info">
                 <h2 id="p1_name">Player 1</h2>
                 <div class="arena-score-box">
-                    <span class="arena-label">FRAMES: <b id="p1_frames">0</b></span>
+                    <span class="arena-label">FR: <b id="p1_frames">0</b></span>
                     <div class="arena-score" id="p1_score">0</div>
                 </div>
             </div>
         </div>
 
-        <!-- Центральный блок (Брейк и остаток) -->
+        <!-- Центральный блок: Брейк и Остаток очков -->
         <div class="arena-center">
             <div class="arena-break-card">
                 <span>BREAK</span>
                 <div id="current_break">0</div>
             </div>
             <div class="arena-pts-left">
-                PTS ON TABLE: <b id="pts_remaining">147</b>
+                REMAINING: <b id="pts_remaining">147</b>
             </div>
         </div>
 
@@ -39,8 +39,8 @@
             <div class="arena-info right">
                 <h2 id="p2_name">Player 2</h2>
                 <div class="arena-score-box">
-                    <span class="arena-label">FRAMES: <b id="p2_frames">0</b></span>
                     <div class="arena-score" id="p2_score">0</div>
+                    <span class="arena-label">FR: <b id="p2_frames">0</b></span>
                 </div>
             </div>
             <div class="arena-photo-wrap">
@@ -50,8 +50,8 @@
     </div>
 
     <script>
-      	const SUPABASE_URL = 'https://hljrikalmcsaencxonuz.supabase.co';
-	const SUPABASE_KEY = 'sb_publishable_9yuDAfIJnsQJpL9w1eS_Ig_o66RWYr-';
+      const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+      const SUPABASE_KEY = 'YOUR_ANON_KEY';
       const MATCH_ID = 1;
 
       const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -72,7 +72,7 @@
           const reds = data.reds_on_table ?? 15;
           document.getElementById('pts_remaining').innerText = (reds * 8) + 27;
 
-          // Подсветка активного игрока
+          // Подсветка активного игрока (у кого сейчас ход)
           document.getElementById('arena-p1').classList.toggle('active-turn', data.active_player === 'p1');
           document.getElementById('arena-p2').classList.toggle('active-turn', data.active_player === 'p2');
       }
@@ -94,4 +94,4 @@
       setInterval(loadInitialData, 2000);
     </script>
 </body>
-</html>
+</html>	
